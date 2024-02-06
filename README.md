@@ -1,6 +1,27 @@
 # nodelocaldns-admission-webhook
 
 自动将 DNSConfig 注入新建的 Pod，配合 NodeLocalDNS 使用，用户无需手动进行 DNS 配置。
+给 pod 资源注入如下的 dnsPolicy 和 dnsConfig：
+```yaml
+dnsPolicy: none
+dnsConfig:
+nameservers:
+- 169.254.20.10
+- 10.96.0.10
+searches:
+- <namespace>.svc.cluster.local
+- svc.cluster.local
+- cluster.local
+options:
+- name: ndots
+  value: "3"
+- name: attempts
+  value: "2"
+- name: timeout
+  value: "1"
+```
+
+通过 admission webhook 方案，避免了修改节点上 kubelet 参数或者手动修改 Yaml。
 
 ## 规则
 
