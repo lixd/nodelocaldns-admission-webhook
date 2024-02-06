@@ -1,0 +1,32 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: mutating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: kube-system/nodelocaldns-webhook
+webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      #caBundle: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURUekNDQWplZ0F3SUJBZ0lRVjVSVmNLV1BwS2o4Wkk4WFpkd1dmekFOQmdrcWhraUc5dzBCQVFzRkFEQUEKTUI0WERUSTBNREl3TlRBNU16VTFOVm9YRFRJME1EVXdOVEE1TXpVMU5Wb3dBRENDQVNJd0RRWUpLb1pJaHZjTgpBUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTFI1RjVrWlZaQ3hNZk5pUkdZMlM2SlBIWlNKT3REU1Nvd2QvYjlsCk5zT0hOUUc4RlB6amdaZjMraGhSbTd2aFFmVjl3MlJ4L1UySS9wV2FrU2tRL2NJMUxyNGhiRmtBeUM0MWZXbTEKRUE5TXdSWjVjL3NUQWRldGZYSFc3eDMvbFBOWTRTVSt4U2lTejRtTHpxTkhWZ2RJVnNkT3ZSQThqWGtjczJtTgpSSlJTUjBhTGtncUluZ09xcXFMcnpMRERQLzduY1p3TTJVb3lpSW4zb0NVYkp6MFFZNWlUNlhwQ04yYmFXa3dLCi8ra2pGcGkwVGhMMjZycGpkMllpaWVIRGJZeVpMQUdnZWZUQ0k5WjY2K3k5dXFOdy95djZpbEVuaWFuMlk0QUgKd3l2WHBxV24rcHgrYUFXSy9LOHZ2YTZpTTJFUTVZaHl5c2FEdGJFbFUrODRqdGNDQXdFQUFhT0J4RENCd1RBTwpCZ05WSFE4QkFmOEVCQU1DQmFBd0RBWURWUjBUQVFIL0JBSXdBRENCb0FZRFZSMFJBUUgvQklHVk1JR1NnaFJ1CmIyUmxiRzlqWVd4a2JuTXRkMlZpYUc5dmE0SWdibTlrWld4dlkyRnNaRzV6TFhkbFltaHZiMnN1YTNWaVpTMXoKZVhOMFpXMkNKRzV2WkdWc2IyTmhiR1J1Y3kxM1pXSm9iMjlyTG10MVltVXRjM2x6ZEdWdExuTjJZNEl5Ym05awpaV3h2WTJGc1pHNXpMWGRsWW1odmIyc3VhM1ZpWlMxemVYTjBaVzB1YzNaakxtTnNkWE4wWlhJdWJHOWpZV3d3CkRRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFJdzFkSlp6NUVFc0N0WE9sYW4vNlp5aTluN0xWOTUrZW5NQjRzK3kKRmZLWHZBbDFaRWFjL3F3Vkk2NWZsakpjL1MraTlMTVFrZU9ObEN4eHhBb0hTcWJBb2Q3WWtSMWtTVHU0OWIwSgphNWtwdlVUcmpKZ3NSMW9qZDZVcEk0bUJXK1AvS1I2bVBvT0lTd0xCcC9LL05WNWpoS2FIRzVScng1bmsvRDJsClBQVStkM1RjZlc0clFQbTVyMFcwelIvaVV4YURFZ3UyYWFJalJubktzVFdSeWhnNzFmdFoyR2NhN1JIN2VKR0QKYkRKM1Y1ZXAxOXd2MHQ4bVpGRis2bTl5d3FTZDJ3QjZLMlY3MGdHYWhBbEtkKzVTMnN2eGQyTi9NTUxnbk9NNgpsOFdyUGVmRlNyaG5iOWxZY2VMZEhZWnBXMDAvYzRrM0wrTElaZFRvdDJ0RkNDMD0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+      service:
+        name: nodelocaldns-webhook
+        namespace: kube-system
+        path: /mutate-v1-pod
+    failurePolicy: Fail
+    name: nodelocaldns-webhook.kube-system.svc
+    namespaceSelector: # 限制生效范围
+      matchLabels:
+        node-local-dns-injection: enabled
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - pods
+    sideEffects: None

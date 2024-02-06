@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  namespace: kube-system
+  name: nodelocaldns-webhook
+spec:
+  dnsNames:
+    - 'nodelocaldns-webhook.kube-system.svc'
+    - 'nodelocaldns-webhook.kube-system.svc.cluster.local'
+  issuerRef:
+    kind: Issuer
+    name: 'nodelocaldns-webhook-selfsigned-issuer'
+  secretName: nodelocaldns-webhook

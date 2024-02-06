@@ -1,0 +1,7 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  namespace: kube-system
+  name: nodelocaldns-webhook-selfsigned-issuer
+spec:
+  selfSigned: { }

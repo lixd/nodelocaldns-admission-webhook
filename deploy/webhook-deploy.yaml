@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodelocaldns-webhook
+  namespace: kube-system
+  labels:
+    app: nodelocaldns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodelocaldns
+  template:
+    metadata:
+      labels:
+        app: nodelocaldns
+    spec:
+      serviceAccountName: nodelocaldns-webhook # 提供查询 namespace 信息的权限
+      containers:
+        - name: nodelocaldns-webhook
+          image: lixd96/nodelocaldns-admission-webhook:v0.0.1
+          imagePullPolicy: IfNotPresent
+          command:
+            - /manager
+          args:
+            - "-kube-dns=10.96.0.10"
+            - "-local-dns=169.254.20.10"
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /tmp/k8s-webhook-server/serving-certs # Webhook 证书默认路径
+              readOnly: true
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: nodelocaldns-webhook
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodelocaldns-webhook
+  namespace: kube-system
+  labels:
+    app: nodelocaldns
+spec:
+  ports:
+    - port: 443
+      targetPort: 9443
+  selector:
+    app: nodelocaldns
