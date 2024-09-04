@@ -21,6 +21,20 @@ options:
   value: "1"
 ```
 
+推荐阅读：
+* NodeLocalDNS 部署及性能测试： [Kubernetes教程(二三)---使用 NodeLocalDNS 提升集群 DNS 性能和可靠性](https://www.lixueduan.com/posts/kubernetes/23-node-local-dns/)
+* Webhook 实现及其配置： [Kubernetes教程(二四)---基于 Admission Webhook 实现 Pod DNSConfig 自动注入](https://www.lixueduan.com/posts/kubernetes/24-node-local-dns-webhook/)
+
+### 微信公众号：探索云原生
+
+一个云原生打工人的探索之路，专注云原生，Go，坚持分享最佳实践、经验干货。
+
+扫描下面二维码，关注我即时获取更新~
+
+![](https://img.lixueduan.com/about/wechat/qrcode_search.png)
+
+
+
 通过 admission webhook 方案，避免了修改节点上 kubelet 参数或者手动修改 Yaml。
 
 ## 规则
