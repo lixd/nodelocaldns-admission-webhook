@@ -3,6 +3,7 @@ package pkg
 import (
 	"context"
 	"fmt"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog/v2"
@@ -23,10 +24,10 @@ func StringPtr(s string) *string {
 }
 
 func loadCustomDnsConfig(namespace string, config Config) (corev1.DNSPolicy, *corev1.PodDNSConfig) {
-	nsSvc := fmt.Sprintf("%s.svc.cluster.local", namespace)
+	nsSvc := fmt.Sprintf("%s.svc.%s", namespace, config.Domain)
 	return "None", &corev1.PodDNSConfig{
 		Nameservers: []string{config.LocalDNS, config.KubeDNS},
-		Searches:    []string{nsSvc, "svc.cluster.local", "cluster.local"},
+		Searches:    []string{nsSvc, fmt.Sprintf("svc.%s", config.Domain), config.Domain},
 		Options: []corev1.PodDNSConfigOption{
 			{
 				Name:  "ndots",

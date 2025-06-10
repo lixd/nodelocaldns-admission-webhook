@@ -63,6 +63,7 @@ Pod will automatically inject DNS cache when all of the following conditions are
 * 2）创建 Issuer、Certificate 对象，让 cert-manager 签发证书并存放到 Secret
 * 3）创建 rbac 并部署 Webhook, 挂载 2 中的 Secret 到容器中以开启 TLS
   * 可以修改启动命令中的 -kube-dns 和 -local-dns 参数来调整 KubeDNS 和 NodeLocalDNS 地址，默认为 10.96.0.10 和 169.254.20.10。
+  * 可以修改启动命令中的 -domain 配置集群 domain 默认为 cluster.local
 * 4）创建 WebhookConfig,增加 `cert-manager.io/inject-ca-from` annotation 用于自动注入 CA 证书
 
 

@@ -19,8 +19,9 @@ package main
 import (
 	"crypto/tls"
 	"flag"
-	"github.com/lixd96/nodelocaldns-admission-webhook/pkg"
 	"os"
+
+	"github.com/lixd96/nodelocaldns-admission-webhook/pkg"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -57,8 +58,10 @@ func main() {
 	var enableHTTP2 bool
 	var kubedns string
 	var localdns string
+	var domian string
 	flag.StringVar(&kubedns, "kube-dns", "10.96.0.10", "The service ip of kube dns.")
 	flag.StringVar(&localdns, "local-dns", "169.254.20.10", "The virtual ip of node local dns.")
+	flag.StringVar(&domian, "domain", "cluster.local", "cluster domain")
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -126,7 +129,7 @@ func main() {
 	mgr.GetWebhookServer().Register("/mutate-v1-pod", &webhook.Admission{Handler: &pkg.PodAnnotator{
 		Client:  mgr.GetClient(),
 		Decoder: admission.NewDecoder(mgr.GetScheme()),
-		Config:  pkg.NewDNSConfig(kubedns, localdns),
+		Config:  pkg.NewDNSConfig(kubedns, localdns, domian),
 	}})
 
 	//+kubebuilder:scaffold:builder
